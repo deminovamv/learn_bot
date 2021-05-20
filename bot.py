@@ -56,9 +56,10 @@ def name_planet(update, context):
     else:
         try:
              planet_name = text[1]
-             key_planet = get_key(Planet,planet_name)
-             if key_planet:
-                 planet_name = key_planet
+             if 'text' not in text:
+                 key_planet = get_key(Planet,planet_name)
+                 if key_planet:
+                     planet_name = key_planet
              m = getattr(ephem, planet_name)(date.today())
              update.message.reply_text(f'Planet: {planet_name}')
              constellation = ephem.constellation(m)
