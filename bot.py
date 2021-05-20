@@ -30,7 +30,7 @@ PROXY = {'proxy_url': settings.PROXY_URL,
 
 
 Planet ={
-  "Mars":"Марс",
+  "Mars": "Марс",
   "Mercury":"Меркурий",
   "Venus":"Венера",
   "Jupiter":"Юпитер",
@@ -43,18 +43,19 @@ Planet ={
 }
 
 def get_key(d, value):
+    value = value.capitalize()
     for k, v in d.items():
-        if v == value:
+        if v == value or k == value:
             return (k)
 
 def name_planet(update, context):
     print(f'/planet')
     text = update.message.text.split()
     if len(text) == 1:
-        update.message.reply_text('Пожалуйста, введите название планеты в формате \'/planet Mars\'')
+        update.message.reply_text('Пожалуйста, введите название планеты')
     else:
         try:
-             planet_name = text[1].capitalize()
+             planet_name = text[1]
              key_planet = get_key(Planet,planet_name)
              if key_planet:
                  planet_name = key_planet
@@ -76,7 +77,12 @@ def greet_user(update, context):
 def talk_to_me(update, context):
     text= update.message.text
     print(text)
-    update.message.reply_text(text)
+    key_planet = get_key(Planet,text)
+    if key_planet:
+        update.message.text = 'text ' + key_planet
+        name_planet(update, context)
+    else:
+        update.message.reply_text(text)
 
 def main():
     mybot= Updater(settings.API_KEY, use_context= True, request_kwargs= PROXY)
