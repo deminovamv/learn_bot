@@ -54,19 +54,23 @@ def name_planet(update, context):
     if len(text) == 1:
         update.message.reply_text('Пожалуйста, введите название планеты')
     else:
-        try:
+        # try:
              planet_name = text[1]
              if 'text' not in text:
                  key_planet = get_key(Planet,planet_name)
                  if key_planet:
                      planet_name = key_planet
-             m = getattr(ephem, planet_name)(date.today())
-             update.message.reply_text(f'Planet: {planet_name}')
-             constellation = ephem.constellation(m)
-             update.message.reply_text(f'Date: {date.today()}')
-             update.message.reply_text(f'Constellation: {constellation[1]}')
-        except(AttributeError,TypeError):
-            update.message.reply_text('Это не похоже на название планеты, пожалуста, попробуйте ещё раз')
+             m = getattr(ephem, planet_name, 'error')
+             if m == 'error':
+                 update.message.reply_text('Это не похоже на название планеты, пожалуйста, попробуйте ещё раз')   
+             else:
+                 update.message.reply_text(f'Planet: {planet_name}')
+                 m = m(date.today())
+                 constellation = ephem.constellation(m)
+                 update.message.reply_text(f'Date: {date.today()}')
+                 update.message.reply_text(f'Constellation: {constellation[1]}')
+        # except(AttributeError,TypeError):
+            # update.message.reply_text('Это не похоже на название планеты, пожалуста, попробуйте ещё раз')
 
 
 
